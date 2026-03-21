@@ -1,8 +1,9 @@
-def countdown(n):
-    for i in range(n, -1, -1):
-        yield i
+import re
 
-n = int(input())
-for x in countdown(n):
-    print(x)
+txt = "The rain in Spain"
+
+#Find all lower case characters alphabetically between "a" and "m":
+
+x = re.findall("[a-m]", txt)
+print(x)
 

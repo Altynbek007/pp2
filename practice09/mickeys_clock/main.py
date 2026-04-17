@@ -1,4 +1,5 @@
 import pygame
+import os
 from clock import get_angles, rotate
 
 pygame.init()
@@ -6,20 +7,20 @@ pygame.init()
 screen = pygame.display.set_mode((800, 800))
 pygame.display.set_caption("Mickey Clock")
 
-bg = pygame.image.load("images/clock.jpeg").convert_alpha()
-right_hand = pygame.image.load("images/right_hand.png").convert_alpha()
-left_hand = pygame.image.load("images/left_hand.png").convert_alpha()
+BASE_DIR = os.path.dirname(__file__)
 
-right_hand = pygame.transform.scale(right_hand, (1000, 1000))
-left_hand = pygame.transform.scale(left_hand, (1000, 1000))
-
+bg = pygame.image.load(os.path.join(BASE_DIR, "images/clock.PNG")).convert_alpha()
+right_hand = pygame.image.load(os.path.join(BASE_DIR, "images/right_hand.PNG")).convert_alpha()
+left_hand = pygame.image.load(os.path.join(BASE_DIR, "images/left_hand.PNG")).convert_alpha()
 
 bg = pygame.transform.scale(bg, (800, 800))
+right_hand = pygame.transform.scale(right_hand, (800, 800))
+left_hand = pygame.transform.scale(left_hand, (800, 800))
 
 center = (400, 400)
 
-done = False
 clock = pygame.time.Clock()
+done = False
 
 while not done:
     for event in pygame.event.get():
@@ -28,8 +29,11 @@ while not done:
 
     minute_angle, second_angle = get_angles()
 
-    right_rotated, right_rect = rotate(right_hand, minute_angle, center)
-    left_rotated, left_rect = rotate(left_hand, second_angle, center)
+    # большая стрелка = секунды
+    right_rotated, right_rect = rotate(right_hand, second_angle, center)
+
+    # маленькая стрелка = минуты
+    left_rotated, left_rect = rotate(left_hand, minute_angle, center)
 
     screen.fill((255, 255, 255))
     screen.blit(bg, (0, 0))

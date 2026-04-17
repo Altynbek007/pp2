@@ -1,36 +1,37 @@
 import pygame
-import sys
-import datetime
+import os
 
-pygame.init()
+BASE_DIR = os.path.dirname(__file__)
 
-screen = pygame.display.set_mode((600, 600))
-clock = pygame.time.Clock()
+playlist = [
+    os.path.join(BASE_DIR, "Music/Starboy.mp3"),
+    os.path.join(BASE_DIR, "Music/La la la.mp3"),
+    os.path.join(BASE_DIR, "Music/Heat Waves.mp3")
+]
 
-image = pygame.image.load("mickey_hand.png")
+current_track = 0
 
-def draw_hand(angle):
-    rotated = pygame.transform.rotate(image, angle)
-    rect = rotated.get_rect(center=(300, 300))
-    screen.blit(rotated, rect)
 
-while True:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
+def play_track():
+    pygame.mixer.music.load(playlist[current_track])
+    pygame.mixer.music.play()
 
-    now = datetime.datetime.now()
-    minutes = now.minute
-    seconds = now.second
 
-    min_angle = -minutes * 6
-    sec_angle = -seconds * 6
+def stop_track():
+    pygame.mixer.music.stop()
 
-    screen.fill((255, 255, 255))
 
-    draw_hand(min_angle)
-    draw_hand(sec_angle)
+def next_track():
+    global current_track
+    current_track = (current_track + 1) % len(playlist)
+    play_track()
 
-    pygame.display.flip()
-    clock.tick(1)
+
+def previous_track():
+    global current_track
+    current_track = (current_track - 1) % len(playlist)
+    play_track()
+
+
+def get_track_name():
+    return os.path.basename(playlist[current_track])

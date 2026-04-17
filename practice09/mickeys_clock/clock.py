@@ -1,15 +1,17 @@
 import pygame
 from datetime import datetime
 
-
 def get_angles():
-    now = datetime.now()
+    now = datetime.now()  # локальное время (Алматы)
 
-    minute = now.minute
-    second = now.second
+    minutes = now.minute
+    seconds = now.second
 
-    minute_angle = -(minute * 6)
-    second_angle = -(second * 6)
+    # маленькая стрелка (минуты)
+    minute_angle = -(minutes * 6)
+
+    # большая стрелка (секунды)
+    second_angle = -(seconds * 6)
 
     return minute_angle, second_angle
 

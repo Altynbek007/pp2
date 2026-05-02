@@ -25,15 +25,15 @@ class Player(pygame.sprite.Sprite):
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_LEFT]:
-            self.rect.x -= 5
+            self.rect.x -= self.speed
         if keys[pygame.K_RIGHT]:
-            self.rect.x += 5
+            self.rect.x += self.speed
 
         self.rect.x = max(150, min(350, self.rect.x))
 
-        if self.timer > 0 and pygame.time.get_ticks() > self.timer:
+        # сброс nitro
+        if self.nitro and pygame.time.get_ticks() > self.timer:
             self.nitro = False
-            self.shield = False
             self.speed = self.base_speed
 
 

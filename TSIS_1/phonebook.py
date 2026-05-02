@@ -156,7 +156,7 @@ def sort_contacts():
     conn.close()
 
 
-# ================= PAGINATION =================
+# ================= PAGINATION (FIXED) =================
 def paginate():
     conn = connect()
     cur = conn.cursor()
@@ -164,24 +164,44 @@ def paginate():
     limit = 3
     offset = 0
 
+    cur.execute("SELECT COUNT(*) FROM public.contacts")
+    total = cur.fetchone()[0]
+
+    if total == 0:
+        print("❌ Нет данных")
+        return
+
     while True:
         cur.execute("SELECT * FROM get_contacts_paginated(%s, %s)", (limit, offset))
         rows = cur.fetchall()
 
-        print("\n--- PAGE ---")
+        page = offset // limit + 1
+        total_pages = (total + limit - 1) // limit
+
+        print(f"\n--- PAGE {page}/{total_pages} ---")
+
         for r in rows:
             print(r)
 
-        cmd = input("next / prev / quit: ")
+        cmd = input("next / prev / quit: ").lower()
 
         if cmd == "next":
-            offset += limit
+            if offset + limit >= total:
+                print("❌ Это последняя страница")
+            else:
+                offset += limit
+
         elif cmd == "prev":
-            offset = max(0, offset - limit)
+            if offset == 0:
+                print("❌ Это первая страница")
+            else:
+                offset -= limit
+
         elif cmd == "quit":
             break
+
         else:
-            print("Invalid command")
+            print("❌ Неверная команда")
 
     cur.close()
     conn.close()

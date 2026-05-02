@@ -1,3 +1,5 @@
+import os
+
 import pygame
 import datetime
 from tools import*
@@ -28,6 +30,7 @@ text_pos = (0, 0)
 
 screen.fill(WHITE)
 base_layer = screen.copy()
+
 
 running = True
 while running:

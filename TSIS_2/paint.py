@@ -173,3 +173,34 @@ while running:
     clock.tick(60)
 
 pygame.quit()
+
+# ================= CONTROLS =================
+
+# COLORS:
+# R - red
+# G - green
+# B - blue
+# Q - black
+
+# BRUSH SIZE:
+# 1 - small (2 px)
+# 2 - medium (5 px)
+# 3 - large (10 px)
+
+# MODES:
+# D - draw (freehand)
+# L - line
+# P - rectangle
+# C - circle
+# S - square
+# E - eraser
+# F - fill (bucket)
+# T - text mode
+
+# SAVE:
+# CTRL + S - save image
+
+# TEXT MODE:
+# ENTER - place text
+# BACKSPACE - delete symbol
+# ESC - cancel text input

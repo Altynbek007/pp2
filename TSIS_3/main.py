@@ -33,7 +33,7 @@ btn_board = Button(200,220,200,50,"Leaderboard")
 btn_settings = Button(200,290,200,50,"Settings")
 btn_back = Button(200,500,200,50,"Back")
 btn_sound = Button(200,350,200,50,"Sound")
-btn_color = Button(200,420,200,50,"Color")
+btn_color = Button(200,420,200,50,"Change Color")
 
 name_input = TextInput(200,250,200,40)
 
@@ -70,11 +70,13 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
+        # ===== MENU =====
         if state == "MENU":
             if btn_play.is_clicked(event): state = "NAME"
             if btn_board.is_clicked(event): state = "BOARD"
             if btn_settings.is_clicked(event): state = "SETTINGS"
 
+        # ===== NAME =====
         elif state == "NAME":
             name_input.handle_event(event)
             if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
@@ -82,17 +84,33 @@ while running:
                 reset_game()
                 state = "PLAY"
 
+        # ===== SETTINGS =====
         elif state == "SETTINGS":
-            if btn_back.is_clicked(event): state = "MENU"
 
+            if btn_back.is_clicked(event):
+                state = "MENU"
+
+            # SOUND (пока просто toggle)
             if btn_sound.is_clicked(event):
                 settings["sound"] = not settings["sound"]
                 save_settings(settings)
 
+            # 🔥 COLOR FIX
             if btn_color.is_clicked(event):
                 settings["car_color"] = "blue" if settings["car_color"]=="red" else "red"
                 save_settings(settings)
 
+                if player:
+                    all_sprites.remove(player)
+                    player = Player(settings["car_color"])
+                    all_sprites.add(player)
+
+        # ===== BOARD =====
+        elif state == "BOARD":
+            if btn_back.is_clicked(event):
+                state = "MENU"
+
+        # ===== PLAY =====
         elif state == "PLAY":
 
             if event.type == SPAWN_ENEMY:
@@ -110,6 +128,8 @@ while running:
                 powerups.add(p)
                 all_sprites.add(p)
 
+    # ===== DRAW =====
+
     if state == "MENU":
         btn_play.draw(screen)
         btn_board.draw(screen)
@@ -123,6 +143,9 @@ while running:
         btn_sound.draw(screen)
         btn_color.draw(screen)
         btn_back.draw(screen)
+
+        # отображение текущего цвета
+        screen.blit(font.render(f"Color: {settings['car_color']}", True, (255,255,255)), (200, 300))
 
     elif state == "PLAY":
         all_sprites.update()
@@ -167,10 +190,16 @@ while running:
         screen.blit(font.render(f"Dist: {distance}",True,(255,255,255)),(10,40))
 
     elif state == "BOARD":
+        screen.fill((30,30,30))
         board = load_leaderboard()
+
+        title = font.render("LEADERBOARD", True, (255,255,0))
+        screen.blit(title, (180,20))
+
         for i, e in enumerate(board):
-            txt = f"{i+1}. {e['name']} | {e['score']} | {e['distance']}m | {e['difficulty']}"
-            screen.blit(font.render(txt,True,(255,255,255)),(50,50+i*30))
+            txt = f"{i+1}. {e['name']} | {e['score']} | {e['distance']}m"
+            screen.blit(font.render(txt,True,(255,255,255)),(50,80+i*30))
+
         btn_back.draw(screen)
 
     pygame.display.flip()
